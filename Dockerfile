@@ -10,9 +10,8 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN ln -sf /usr/share/phpldapadmin /var/www
 
-RUN mv /var/www/config/config.php.example /var/www/config/config.php
+RUN cd /usr/share/phpldapadmin && tar -chvzf /pla.tar.gz config templates queries hooks
 
 COPY default.conf /etc/nginx/conf.d/
 
@@ -21,6 +20,8 @@ COPY www.conf /etc/php5/fpm/pool.d/
 COPY bootstrap.sh /
 
 ENTRYPOINT ["/bootstrap.sh"]
+
+VOLUME ["/etc/phpldapadmin"]
 
 # This script comes from the parent image
 CMD ["/run.sh"]
